@@ -1,0 +1,15 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SharedPreferenceData {
+  static const _fcmTokenKey = 'fcm_token';
+
+  static Future<bool> hasSeenOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('has_seen_onboarding') ?? false;
+  }
+
+  static Future<void> setOnboardingSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_seen_onboarding', true);
+  }
+}
