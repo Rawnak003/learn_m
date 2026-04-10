@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(scaffoldBackgroundColor: const Color(0xffffffff)),
           themeMode: ThemeMode.system,
           initialRoute: AppRoutes.initialRoute,
-          routes: AppRoutes.routes,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
         );
       },
     );

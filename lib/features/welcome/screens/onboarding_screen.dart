@@ -20,7 +20,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _nextPage() async {
     if (_currentPage == 2) {
       await SharedPreferenceData.setOnboardingSeen();
-      Navigator.pushReplacementNamed(context, RouteNames.onboardingScreen);
+      Navigator.pushReplacementNamed(context, RouteNames.authScreen);
     } else {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -54,10 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPressed: _skip,
                   child: Text(
                     'Skip',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 15.sp, color: Colors.black54),
                   ),
                 ),
               ),
@@ -66,7 +63,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: PageView.builder(
                   controller: _pageController,
                   itemCount: 3,
-                  onPageChanged: (index) => setState(() => _currentPage = index),
+                  onPageChanged: (index) =>
+                      setState(() => _currentPage = index),
                   itemBuilder: (context, index) {
                     return _buildPage(
                       imagePath: _pageIcons[index],
@@ -117,10 +115,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         height: 48.h,
         decoration: BoxDecoration(
           color: isLastPage ? AppColors.primary : AppColors.background,
-          border: Border.all(
-            color: AppColors.primary,
-            width: 1.3.w,
-          ),
+          border: Border.all(color: AppColors.primary, width: 1.3.w),
           borderRadius: BorderRadius.circular(45.r),
         ),
         child: Center(
@@ -130,9 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Text(
                 isLastPage ? 'Get Started' : 'Next',
                 style: TextStyle(
-                  color: isLastPage
-                      ? AppColors.background
-                      : AppColors.primary,
+                  color: isLastPage ? AppColors.background : AppColors.primary,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -141,9 +134,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16.sp,
-                color: isLastPage
-                    ? AppColors.background
-                    : AppColors.primary,
+                color: isLastPage ? AppColors.background : AppColors.primary,
               ),
             ],
           ),
@@ -176,10 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.black54,
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Colors.black54),
           ),
         ),
       ],
