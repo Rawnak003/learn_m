@@ -33,6 +33,7 @@ class AuthScreen extends ConsumerWidget {
                   labelColor: AppColors.primary,
                   unselectedLabelColor: Colors.black,
                   labelStyle: TextStyle(
+                    color: Colors.black,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600
                   ),

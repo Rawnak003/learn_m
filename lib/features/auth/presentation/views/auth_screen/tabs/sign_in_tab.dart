@@ -8,7 +8,7 @@ import '../../../../../../common_widgets/buttons/social_buttons.dart';
 import '../../../../../../common_widgets/text_form_field/custom_text_field.dart';
 import '../../../../../../core/utils/input_validators.dart';
 import '../../../../../../gen/assets.gen.dart';
-import '../../view_model/auth_view_model.dart';
+import '../../../view_model/auth_screen/auth_view_model.dart';
 
 class SignInTab extends ConsumerWidget {
   const SignInTab({super.key});

@@ -57,6 +57,7 @@ class PrimaryButton extends StatelessWidget {
                   iconPath!,
                   height: iconSize,
                   width: iconSize,
+                  // ignore: deprecated_member_use
                   color: titleColor ?? Colors.white,
                 ),
               ),

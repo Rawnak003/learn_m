@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_m/app/routes/route_names.dart';
-import '../../features/auth/screens/auth_screen/views/auth_screen.dart';
-import '../../features/welcome/screens/onboarding_screen.dart';
+import '../../features/auth/presentation/views/auth_screen/auth_screen.dart';
+import '../../features/welcome/presentation/views/onboarding_screen.dart';
 
 class AppRoutes {
   static String initialRoute = RouteNames.onboardingScreen;
