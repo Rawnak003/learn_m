@@ -8,15 +8,31 @@ import '../../../../../../common_widgets/buttons/social_buttons.dart';
 import '../../../../../../common_widgets/text_form_field/custom_text_field.dart';
 import '../../../../../../core/utils/input_validators.dart';
 import '../../../../../../gen/assets.gen.dart';
-import '../../../view_model/auth_screen/auth_view_model.dart';
+import '../../../view_model/riverpod/sign_in_provider.dart';
 
-class SignInTab extends ConsumerWidget {
+class SignInTab extends ConsumerStatefulWidget {
   const SignInTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SignInTab> createState() => _SignInTabState();
+}
+
+class _SignInTabState extends ConsumerState<SignInTab> {
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(signInProvider);
-    final controller = ref.read(signInProvider.notifier);
+    final provider = ref.read(signInProvider.notifier);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -31,7 +47,8 @@ class SignInTab extends ConsumerWidget {
 
                   CustomTextField(
                     label: 'Email',
-                    controller: controller.emailController,
+                    controller: _emailController,
+                    onChanged: (value) => provider.updateEmail(value),
                     action: TextInputAction.next,
                     prefixIconPath: Assets.icons.envelope,
                     validator: (value) => InputValidators.emailValidator(value),
@@ -41,14 +58,15 @@ class SignInTab extends ConsumerWidget {
 
                   CustomTextField(
                     label: 'Password',
-                    controller: controller.passwordController,
+                    controller: _passwordController,
+                    onChanged: (value) => provider.updatePassword(value),
                     action: TextInputAction.done,
                     isObscure: state.isPasswordObscure,
                     prefixIconPath: Assets.icons.lock,
                     suffixIconPath: state.isPasswordObscure
                         ? Assets.icons.eye
                         : Assets.icons.eyeSlash,
-                    suffixIconOnTap: controller.togglePassword,
+                    suffixIconOnTap: provider.togglePassword,
                     validator: (value) =>
                         InputValidators.passwordValidator(value),
                   ),

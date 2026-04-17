@@ -11,8 +11,8 @@ class InputValidators {
   }
 
   static String? passwordValidator(String? value) {
-    if ((value?.isEmpty ?? true) || (value!.length < 6)) {
-      return 'Please enter Password with at least 6 letters';
+    if ((value?.isEmpty ?? true) || (value!.length < 8)) {
+      return 'Please enter Password with at least 8 letters';
     }
     return null;
   }

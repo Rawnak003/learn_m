@@ -1,22 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../../common_widgets/buttons/social_buttons.dart';
+import '../../../../../../common_widgets/loading/wave_loading.dart';
 import '../../../../../../common_widgets/text_form_field/custom_text_field.dart';
 import '../../../../../../core/constants/app_colors.dart';
+import '../../../../../../core/utils/app_utils.dart';
 import '../../../../../../core/utils/input_validators.dart';
 import '../../../../../../gen/assets.gen.dart';
-import '../../../view_model/auth_screen/auth_view_model.dart';
+import '../../../view_model/riverpod/sign_up_provider.dart';
 
-class SignUpTab extends ConsumerWidget {
+class SignUpTab extends ConsumerStatefulWidget {
   const SignUpTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SignUpTab> createState() => _SignUpTabState();
+}
+
+class _SignUpTabState extends ConsumerState<SignUpTab> {
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(signUpProvider);
-    final controller = ref.read(signUpProvider.notifier);
+    final provider = ref.read(signUpProvider.notifier);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -29,19 +50,20 @@ class SignUpTab extends ConsumerWidget {
                 children: [
                   SizedBox(height: 36.h),
                   CustomTextField(
-                    label: 'Use Name',
-                    controller: controller.usernameController,
+                    label: 'User Name',
+                    controller: _usernameController,
+                    onChanged: (value) => provider.updateUserName(value),
                     action: TextInputAction.next,
                     prefixIconPath: Assets.icons.userCircle,
-                    validator: (value) =>
-                        InputValidators.nameValidator('user name', value),
+                    validator: (value) => InputValidators.nameValidator('user name', value),
                   ),
 
                   SizedBox(height: 16.h),
 
                   CustomTextField(
                     label: 'Email',
-                    controller: controller.emailController,
+                    controller: _emailController,
+                    onChanged: (value) => provider.updateEmail(value),
                     action: TextInputAction.next,
                     prefixIconPath: Assets.icons.envelope,
                     validator: (value) => InputValidators.emailValidator(value),
@@ -51,32 +73,32 @@ class SignUpTab extends ConsumerWidget {
 
                   CustomTextField(
                     label: 'Password',
-                    controller: controller.passwordController,
+                    controller: _passwordController,
+                    onChanged: (value) => provider.updatePassword(value),
                     action: TextInputAction.next,
                     isObscure: state.isPasswordObscure,
                     prefixIconPath: Assets.icons.lock,
                     suffixIconPath: state.isPasswordObscure
                         ? Assets.icons.eye
                         : Assets.icons.eyeSlash,
-                    suffixIconOnTap: controller.togglePassword,
-                    validator: (value) =>
-                        InputValidators.passwordValidator(value),
+                    suffixIconOnTap: provider.togglePassword,
+                    validator: (value) => InputValidators.passwordValidator(value),
                   ),
 
                   SizedBox(height: 16.h),
 
                   CustomTextField(
                     label: 'Confirm Password',
-                    controller: controller.confirmPasswordController,
+                    controller: _confirmPasswordController,
+                    onChanged: (value) => provider.updateConfirmPassword(value),
                     action: TextInputAction.done,
                     isObscure: state.isConfirmPasswordObscure,
                     prefixIconPath: Assets.icons.lock,
                     suffixIconPath: state.isConfirmPasswordObscure
                         ? Assets.icons.eye
                         : Assets.icons.eyeSlash,
-                    suffixIconOnTap: controller.toggleConfirmPassword,
-                    validator: (value) =>
-                        InputValidators.passwordValidator(value),
+                    suffixIconOnTap: provider.toggleConfirmPassword,
+                    validator: (value) => InputValidators.passwordValidator(value),
                   ),
 
                   SizedBox(height: 16.h),
@@ -86,7 +108,7 @@ class SignUpTab extends ConsumerWidget {
                       Checkbox(
                         value: state.isChecked,
                         onChanged: (value) {
-                          controller.toggleCheckbox(value!);
+                          provider.toggleCheckbox(value!);
                         },
                         activeColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
@@ -131,16 +153,28 @@ class SignUpTab extends ConsumerWidget {
                   ),
                   SizedBox(height: 36.h),
 
-                  PrimaryButton(
-                    onTap: () async {
-                      if (state.isChecked) {
+                  Visibility(
+                    visible: !state.isLoading,
+                    replacement: const WaveLoading(),
+                    child: PrimaryButton(
+                      onTap: () async {
+                        final error = await provider.signUp();
 
-                      } else {}
-                    },
-                    buttonTitle: 'Sign Up',
-                    isRounded: true,
-                    isOutlined: state.isChecked ? false : true,
-                    titleColor: state.isChecked ? Colors.white : AppColors.primary,
+                        if (error != null) {
+                          AppUtils.showToast(error);
+                        } else {
+                          if (mounted) {
+                            DefaultTabController.of(context).animateTo(0);
+                          }
+                        }
+                      },
+                      buttonTitle: 'Sign Up',
+                      isRounded: true,
+                      isOutlined: state.isChecked ? false : true,
+                      titleColor: state.isChecked
+                          ? Colors.white
+                          : AppColors.primary,
+                    ),
                   ),
 
                   SizedBox(height: 36.h),
